@@ -1,17 +1,21 @@
+from aiogram import Bot, Dispatcher, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.utils import executor
 import asyncio
 
-async def f (no1, no2):
-    print(f"{no1+no2}")
-    for i in range(1, no2):
-        await asyncio.sleep(i - no2)
-    print
+api = ''
 
-async def setup():
-    task_1 = asyncio.create_task(f(1, 3))
-    task_2 = asyncio.create_task(f(1, 4))
-    task_3 = asyncio.create_task(f(1, 5))
-    await task_1
-    await task_2
-    await task_3
+bot = Bot(token=api)
 
-asyncio.run(setup())
+dp = Dispatcher(bot, storage=MemoryStorage())
+
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    print('Привет! Я бот, помогающий твоему здоровью.')
+
+@dp.message_handler()
+async def all_messages(message: types.Message):
+    print('Введите команду /start, чтобы начать общение.')
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)
